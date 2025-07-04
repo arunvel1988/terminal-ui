@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Docker Containers</h2>
-{% if containers %}
+<h2>Kubernetes Pods</h2>
+{% if pods %}
 <ul class="list-group">
-  {% for c in containers %}
+  {% for pod in pods %}
   <li class="list-group-item d-flex justify-content-between align-items-center">
-    {{ c }}
-    <a href="{{ url_for('docker_terminal', container=c) }}" class="btn btn-sm btn-outline-success">Shell</a>
+    <span>{{ pod.namespace }} / {{ pod.name }}</span>
+    <a href="{{ url_for('k8s_terminal', namespace=pod.namespace, pod=pod.name) }}" class="btn btn-sm btn-outline-primary">Shell</a>
   </li>
   {% endfor %}
 </ul>
 {% else %}
-<p>No running containers found.</p>
+<p>No running pods found.</p>
 {% endif %}
 {% endblock %}
