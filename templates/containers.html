@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Docker Containers</h2>
+{% if containers %}
+<ul class="list-group">
+  {% for c in containers %}
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    {{ c }}
+    <a href="{{ url_for('docker_terminal', container=c) }}" class="btn btn-sm btn-outline-success">Shell</a>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No running containers found.</p>
+{% endif %}
+{% endblock %}

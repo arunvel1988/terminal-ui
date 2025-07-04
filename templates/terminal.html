@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Shell: {{ container }} {% if namespace %}(Namespace: {{ namespace }}){% endif %}</h2>
+<div id="terminal" class="terminal" tabindex="0"></div>
+<input id="cmd-input" autocomplete="off" autofocus placeholder="Type your commands here..." />
+
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+  const socket = io();
+  const term = document.getElementById('terminal');
+  const input = document.getElementById('cmd-input');
+  const container = "{{ container }}";
+  const type = "{{ type }}";
+  const namespace = "{{ namespace if namespace else '' }}";
+
+  function appendOutput(data) {
+    term.textContent += data;
+    term.scrollTop = term.scrollHeight;
+  }
+
+  socket.emit('start_shell', {container: container, type: type, namespace: namespace});
+
+  socket.on('output', function(msg) {
+    appendOutput(msg.data);
+  });
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const cmd = input.value + '\n';
+      socket.emit('input', {data: cmd});
+      input.value = '';
+    }
+  });
+
+  term.focus();
+</script>
+{% endblock %}
